@@ -5,7 +5,7 @@ date: "today"
 date-format: "long" 
 toc: true
 number-sections: true
-abstract: "This paper employs statistical models to analyze customer review data from a Pizza Hut outlet in Sri Lanka, specifically examining how star ratings correlate with the presence and length of textual feedback. Our analysis reveals that customers providing lower star ratings are more likely to leave detailed text reviews. These findings suggest that customer reviews, particularly those with negative feedback, are a rich but underutilized resource for businesses aiming to enhance customer satisfaction and service quality. The paper thus sheds light on consumer behavior patterns, underscoring the importance of nuanced feedback analysis in the continual improvement of customer experience."
+abstract: "This paper employs statistical models to analyze customer review data from a Pizza Hut outlet in Sri Lanka, specifically examining how star ratings correlate with the presence and length of textual feedback. My analysis reveals that customers providing lower star ratings are more likely to leave detailed text reviews. These findings suggest that customer reviews, particularly those with negative feedback, are a rich but underutilized resource for businesses aiming to enhance customer satisfaction and service quality. The paper thus sheds light on consumer behavior patterns, underscoring the importance of nuanced feedback analysis in the continual improvement of customer experience."
 thanks: "Code and data from this analysis are available at: https://github.com/Hhnxxxxxx/Pizza-Hut-Reviews.git." 
 bibliography: Reference.bib
 format: pdf
@@ -15,6 +15,7 @@ format: pdf
 #| label: load-packages
 #| include: false
 
+# Load necessary libraries
 library(dataverse)
 library(knitr)
 library(arrow)
@@ -46,7 +47,7 @@ Visualization and interpretation of the data were greatly enhanced by ggplot2 (@
 
 For the advanced statistical modeling, we employed rstanarm (@Rstanarm), which provided a suite of tools for Bayesian inference in generalized linear models. This was complemented by tidybayes (@Tidybayes), which enabled a tidy workflow when working with Bayesian models. The arrow package (@Arrow) was pivotal in efficient data reading and writing, ensuring quick access to our dataset.
 
-The modelsummary package (@Modelsummary) allowed us to create detailed and comprehensive statistical tables, effectively summarizing the results of our complex models. To visualize distributions and express uncertainty in our data, ggdist (@Ggdist) proved invaluable. For handling the outputs from mixed models, broom.mixed (@BroomMixed) was utilized, allowing for the tidying and interpretation of mixed effects models. Collectively, the synergy of these R packages provided a robust framework for our research, ensuring a high standard of accuracy and reproducibility.
+The modelsummary package (@Modelsummary) allowed us to create detailed and comprehensive statistical tables, effectively summarizing the results of our complex models. To visualize distributions and express uncertainty in our data, ggdist (@Ggdist) proved invaluable. For handling the outputs from mixed models, broom.mixed (@BroomMixed) was utilized, allowing for the tidying and interpretation of mixed effects models. Collectively, these R packages provided a robust framework for our research, ensuring a high standard of accuracy and reproducibility.
 
 ## Raw Data
 
@@ -57,6 +58,7 @@ The modelsummary package (@Modelsummary) allowed us to create detailed and compr
 #| results: 'hide'
 #| echo: false
 
+# Read the CSV file 'pizza_hut_reviews.csv' from the specified path into a data frame called 'pizza_hut_reviews'
 pizza_hut_reviews <- read.csv("../Data/pizza_hut_reviews.csv")
 
 ```
@@ -81,10 +83,11 @@ In presenting the raw data in @tbl-raw, readers are invited to witness the unfil
 #| warning: false
 #| echo: false
 
+# Display the first 10 rows of 'pizza_hut_reviews' with custom column names in a table format
 head(pizza_hut_reviews, 10) |>
   kable(
-    col.names = c("Title", "Stars", "Text"),
-    booktabs = TRUE
+    col.names = c("Title", "Stars", "Text"), # Custom column names
+    booktabs = TRUE # Use booktabs style for better table layout
   )
 
 ```
@@ -98,6 +101,7 @@ head(pizza_hut_reviews, 10) |>
 #| results: 'hide'
 #| echo: false
 
+# Read a parquet file containing clean Pizza Hut reviews data into 'clean_pizza_hut_reviews'
 clean_pizza_hut_reviews <- read_parquet("../Data/clean_pizza_hut_reviews.parquet")
 
 ```
@@ -122,6 +126,7 @@ This cleaned version facilitates a more straightforward approach to understandin
 #| warning: false
 #| echo: false
 
+# Preview first 10 rows of cleaned reviews with specified column names in a table
 head(clean_pizza_hut_reviews, 10) |>
   kable(
     col.names = c("Review ID", "Stars", "Text Indicator", "Words"),
@@ -146,17 +151,18 @@ Notably, as the star rating decreases, the proportion of text reviews (blue bars
 #| warning: false
 #| echo: false
 
+# Plot distribution of review stars with text indicator
 ggplot(clean_pizza_hut_reviews, aes(x = factor(stars), fill = factor(text_indicator))) +
-  geom_bar(position = "dodge") +
-  theme_minimal() +
+  geom_bar(position = "dodge") + # Create dodged bar plot
+  theme_minimal() + # Use minimal theme for cleaner look
   labs(
-    x = "Stars",
-    y = "Number of Reviews",
-    fill = "Text Indicator"
+    x = "Stars", # Label for x-axis
+    y = "Number of Reviews", # Label for y-axis
+    fill = "Text Indicator" # Legend title
   ) +
-  coord_flip() +
-  scale_fill_brewer(palette = "Set1") +
-  theme(legend.position = "bottom", panel.spacing = unit(1, "lines"))
+  coord_flip() + # Flip coordinates for horizontal bars
+  scale_fill_brewer(palette = "Set1") + # Use 'Set1' color palette
+  theme(legend.position = "bottom", panel.spacing = unit(1, "lines")) # Adjust legend and spacing
 
 ```
 
@@ -172,17 +178,18 @@ The plot suggests a tendency for reviews with higher star ratings to have shorte
 #| warning: false
 #| echo: false
 
+# Filter reviews with text and plot word count distribution by star rating
 text_reviews <- clean_pizza_hut_reviews %>%
-  filter(text_indicator == 1)
+  filter(text_indicator == 1) # Select reviews that have text
 
 text_reviews |>
-  ggplot(aes(x = factor(stars), y = words)) +
-  geom_boxplot() +
-  scale_y_log10() +  # This adds the log transformation to the y-axis
-  theme_classic() +
+  ggplot(aes(x = factor(stars), y = words)) + # Map stars to x-axis and word count to y-axis
+  geom_boxplot() + # Create boxplot
+  scale_y_log10() + # Use log scale for y-axis to handle large ranges in word counts
+  theme_classic() + # Use classic theme for a clean look
   labs(
-    x = "Stars Rating",
-    y = "Log of Word Count"
+    x = "Stars Rating", # Label for x-axis
+    y = "Log of Word Count" # Label for y-axis with log transformation indication
   )
 
 ```
@@ -222,6 +229,7 @@ Model Diagnostics are included in [Appendix -@sec-diagnostics].
 #| results: 'hide'
 #| echo: false
 
+# Load the RDS file for the 'text_stars_model' model stored in the Models directory
 text_stars_model <- readRDS("../Models/text_stars_model.rds")
 
 ```
@@ -262,7 +270,10 @@ By integrating the logistic regression model into our analysis, we expect to unv
 #| results: 'hide'
 #| echo: false
 
+# Load Stan GLM model for word counts
 words_stan_glm <- readRDS("../Models/words_stan_glm.rds")
+
+# Load Stan GLMM model for word counts with random effects
 words_stan_glmer <- readRDS("../Models/words_stan_glmer.rds")
 
 ```
@@ -322,16 +333,17 @@ In summary, logistic regression analysis provides evidence to support the notion
 
 ```{r}
 #| label: tbl-coefficients1
-#| tbl-cap: Whether a Customer is Likely to Give a Text Review Based on the Star Rating he Gave
+#| tbl-cap: Whether Customers are Likely to Give a Text Review Based on the Star Rating they Gave
 #| warning: false
 #| echo: false
 
+# Summarize the 'text_stars_model' with Median Absolute Deviation (MAD) as the statistic
 modelsummary(
   list(
-    "Give a Text Review" = text_stars_model
+    "Give a Text Review" = text_stars_model # Model to summarize
   ),
-  statistic = "mad",
-  booktabs = TRUE
+  statistic = "mad", # Use MAD for summarizing the model's fit
+  booktabs = TRUE # Use booktabs style for the summary table
 )
 
 ```
@@ -342,8 +354,9 @@ modelsummary(
 #| warning: false
 #| echo: false
 
-modelplot(text_stars_model, conf_level = 0.9) +
-  labs(x = "90 per cent credibility interval")
+# Plot model estimates with 90% credibility intervals
+modelplot(text_stars_model, conf_level = 0.9) + # Model to plot with confidence level set to 90%
+  labs(x = "90 per cent credibility interval") # Label for x-axis
 
 ```
 
@@ -365,10 +378,11 @@ The consistency between the coefficients' significance and the visual trends in 
 #| warning: false
 #| echo: false
 
+# Summarize negative binomial models: Stan GLM and multilevel GLM
 modelsummary(
   list(
-    "Neg binomial" = words_stan_glm,
-    "Multilevel Neg Binomial" = words_stan_glmer
+    "Neg binomial" = words_stan_glm, # Negative binomial GLM
+    "Multilevel Neg Binomial" = words_stan_glmer # Multilevel negative binomial GLM
   )
 )
 
@@ -380,12 +394,13 @@ modelsummary(
 #| warning: false
 #| echo: false
 
+# Extract and plot group-level effects from multilevel model
 words_stan_glmer |>
-  spread_draws(`(Intercept)`, b[, group]) |>
-  mutate(condition_mean = `(Intercept)` + b) |>
-  ggplot(aes(y = group, x = condition_mean)) +
-  stat_halfeye() +
-  theme_minimal()
+  spread_draws(`(Intercept)`, b[, group]) |> # Extract draws for intercepts and slopes by group
+  mutate(condition_mean = `(Intercept)` + b) |> # Calculate condition mean as intercept + slope
+  ggplot(aes(y = group, x = condition_mean)) + # Plot condition mean by group
+  stat_halfeye() + # Use half-eye plot for visualizing distributions
+  theme_minimal() # Apply minimal theme for a clean look
 
 ```
 
@@ -435,9 +450,12 @@ The path forward from this study points to the integration of natural language p
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
 
+# Trace plot for the 'text_stars_model' to assess mixing and convergence
 plot(text_stars_model, "trace")
 
+# R-hat diagnostic plot for the 'text_stars_model' to check convergence
 plot(text_stars_model, "rhat")
+
 ```
 
 ## Diagnostics for the Multilevel Model
@@ -456,9 +474,12 @@ plot(text_stars_model, "rhat")
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
 
+# Trace plot for the 'words_stan_glmer' to evaluate chain mixing and convergence
 plot(words_stan_glmer, "trace")
 
+# R-hat diagnostic plot for 'words_stan_glmer' to assess convergence across chains
 plot(words_stan_glmer, "rhat")
+
 ```
 
 # References
