@@ -35,7 +35,8 @@ library(broom.mixed)
 
 In this paper, we explore the world of customer feedback, focusing on identifying trends within star ratings and text reviews for a popular Pizza Hut location in Sri Lanka. Given the vast amount of ratings and reviews that businesses receive every day, we wanted to dig deeper into what customers are really trying to say through their feedback. We looked at two main things: whether customers leave text reviews along with their star ratings, and if so, how long these reviews tend to be.
 
-Our main goal was to see how customer star ratings influence the chance of them leaving a text review and the lengthiness of such reviews at this Pizza Hut. By using a logistic regression model and a multilevel negative binomial model, as discussed in @sec-models Models, we tried to understand how likely customers are to leave text reviews and how detailed they are, depending on their level of satisfaction. The findings, which we talk about in @sec-results Results, showed a strong inverse relationship between star ratings and both the likelihood and length of text reviews. Basically, the lower the star rating, the more probable it was for a customer to leave a review, and the longer that review was likely to be. This insight is really important because it highlights how customers who are less satisfied are more likely to give detailed feedback, which could be very useful for businesses looking to make improvements.
+The estimand of our study is the effect of customer star ratings on the probability of leaving
+textual feedback and the length of such feedback at a Pizza Hut outlet in Sri Lanka. By using a logistic regression model and a multilevel negative binomial model, as discussed in @sec-models Models, we tried to understand how likely customers are to leave text reviews and how detailed they are, depending on their level of satisfaction. The findings, which we talk about in @sec-results Results, showed a strong inverse relationship between star ratings and both the likelihood and length of text reviews. Basically, the lower the star rating, the more probable it was for a customer to leave a review, and the longer that review was likely to be. This insight is really important because it highlights how customers who are less satisfied are more likely to give detailed feedback, which could be very useful for businesses looking to make improvements.
 
 The lessons from this study could be really valuable for the retail and service sectors, as they show the importance of paying close attention to customer feedback. The rest of the paper, from @sec-data Data to @sec-discussion Discussion, goes over the data we used, both before and after processing, the methods of analysis we applied, the insights we got from the results, and our thoughts on the limitations and what we might want to look at in future research, like maybe using natural language processing to get even more out of the text reviews. By getting a better grasp of these findings and what they say about customer behavior, businesses can do a better job of adjusting their services to match what their customers want and expect, leading to happier customers all around.
 
@@ -282,7 +283,7 @@ The negative binomial model is specified as:
 
 ```{=latex}
 \begin{align}
-y_i | \mu_i, k \sim NegBinomial(\mu_i, k) \label{eq-nbmodel1} \\
+y_i | (\mu_i, k) \sim NegBinomial(\mu_i, k) \label{eq-nbmodel1} \\
 \log(\mu_i) = \beta_0 + \beta_1 \times \text{stars}_i \label{eq-nbmodel2}
 \end{align}
 ```
@@ -301,7 +302,7 @@ The multilevel negative binomial model allows for random effects across differen
 
 ```{=latex}
 \begin{align}
-y_i | \mu_i, k \sim NegBinomial(\mu_i, k) \label{eq-multilevelmodel1} \\
+y_i | (\mu_i, k) \sim NegBinomial(\mu_i, k) \label{eq-multilevelmodel1} \\
 \log(\mu_i) = \beta_0 + u_{0[\text{stars}_i]} \label{eq-multilevelmodel2} \\
 u_{0j} \sim Normal(0, \sigma_{u_0}^2) \label{eq-multilevelmodel3}
 \end{align}
