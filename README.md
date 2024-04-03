@@ -8,7 +8,7 @@ This repository hosts the comprehensive resources for our study on customer feed
 
 The repo is structured as:
 
-- `Datasheet` contains the datasheet for the dataset used.
+- `Data Sheet` contains the datasheet for the dataset used.
 - `Data` contains the data, including raw data `pizza_hut_reviews.csv` obtained from https://www.kaggle.com/datasets/kanchana1990/pizza-hut-ratings-and-reviews?resource=download, and cleaned data `clean_pizza_hut_reviews.parquet`.
 - `Model` contains fitted models.
 - `Other/LLM` contains the text file of chat history with ChatGPT-4.
