@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository hosts the comprehensive resources for our study on customer feedback and its implications for service quality at a Pizza Hut outlet in Sri Lanka, including the paper, dataset, statistical models, and analysis code.
+This repository hosts the comprehensive resources for our study on customer feedback and its implications for service quality at a Pizza Hut outlet in Sri Lanka, including the paper, dataset, datasheet, statistical models, and analysis code.
 
 ## File Structure
 
