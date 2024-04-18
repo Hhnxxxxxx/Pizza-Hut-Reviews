@@ -5,7 +5,7 @@ date: "today"
 date-format: "long" 
 toc: true
 number-sections: true
-abstract: "This paper uses statistical analysis to explore customer reviews from a Pizza Hut in Sri Lanka, focusing on the relationship between star ratings and the likelihood and length of text feedback. We discovered that lower star ratings often come with more detailed textual reviews. This points to the idea that reviews, especially negative ones, hold valuable insights for businesses looking to improve customer satisfaction and service quality. Through this study, we highlight patterns in consumer behavior, emphasizing how a deep dive into feedback can play a crucial role in bettering customer experiences."
+abstract: "This paper uses statistical analysis to explore customer reviews from a Pizza Hut in Sri Lanka, focusing on the relationship between star ratings and the likelihood and length of text feedback. We discovered that lower star ratings often come with more detailed textual reviews. This points to the idea that reviews, especially negative ones, hold insights for businesses looking to improve customer satisfaction and service quality. Through this study, we highlight patterns in consumer behavior, emphasizing how a deep dive into feedback can play a role in bettering customer experiences."
 thanks: "Code and data from this analysis are available at: https://github.com/Hhnxxxxxx/Pizza-Hut-Reviews.git." 
 bibliography: Reference.bib
 format: pdf
@@ -38,7 +38,7 @@ In this paper, we explore the world of customer feedback, focusing on identifyin
 The estimand of our study is the effect of customer star ratings on the probability of leaving
 textual feedback and the length of such feedback at a Pizza Hut outlet in Sri Lanka. By using a logistic regression model and a multilevel negative binomial model, as discussed in @sec-models Models, we tried to understand how likely customers are to leave text reviews and how detailed they are, depending on their level of satisfaction. The findings, which we talk about in @sec-results Results, showed a strong inverse relationship between star ratings and both the likelihood and length of text reviews. Basically, the lower the star rating, the more probable it was for a customer to leave a review, and the longer that review was likely to be. This insight is really important because it highlights how customers who are less satisfied are more likely to give detailed feedback, which could be very useful for businesses looking to make improvements.
 
-The lessons from this study could be really valuable for the retail and service sectors, as they show the importance of paying close attention to customer feedback. The rest of the paper, from @sec-data Data to @sec-discussion Discussion, goes over the data we used, both before and after processing, the methods of analysis we applied, the insights we got from the results, and our thoughts on the limitations and what we might want to look at in future research, like maybe using natural language processing to get even more out of the text reviews. By getting a better grasp of these findings and what they say about customer behavior, businesses can do a better job of adjusting their services to match what their customers want and expect, leading to happier customers all around.
+The lessons from this study could be useful for the retail and service sectors, as they show the importance of paying close attention to customer feedback. The rest of the paper, from @sec-data Data to @sec-discussion Discussion, goes over the data we used, both before and after processing, the methods of analysis we applied, the insights we got from the results, and our thoughts on the limitations and what we might want to look at in future research, like maybe using natural language processing to get even more out of the text reviews. By getting a better grasp of these findings and what they say about customer behavior, businesses can do a better job of adjusting their services to match what their customers want and expect, leading to happier customers all around.
 
 # Data {#sec-data}
 
@@ -48,7 +48,7 @@ Visualization and interpretation of the data were greatly enhanced by ggplot2 (@
 
 For the advanced statistical modeling, we employed rstanarm (@Rstanarm), which provided a suite of tools for Bayesian inference in generalized linear models. This was complemented by tidybayes (@Tidybayes), which enabled a tidy workflow when working with Bayesian models. The arrow package (@Arrow) was pivotal in efficient data reading and writing, ensuring quick access to our dataset.
 
-The modelsummary package (@Modelsummary) allowed us to create detailed and comprehensive statistical tables, effectively summarizing the results of our complex models. To visualize distributions and express uncertainty in our data, ggdist (@Ggdist) proved invaluable. For handling the outputs from mixed models, broom.mixed (@BroomMixed) was utilized, allowing for the tidying and interpretation of mixed effects models. Collectively, these R packages provided a robust framework for our research, ensuring a high standard of accuracy and reproducibility.
+The modelsummary package (@Modelsummary) allowed us to create detailed statistical tables, effectively summarizing the results of our complex models. To visualize distributions and express uncertainty in our data, ggdist (@Ggdist) proved invaluable. For handling the outputs from mixed models, broom.mixed (@BroomMixed) was utilized, allowing for the tidying and interpretation of mixed effects models. Collectively, these R packages provided a robust framework for our research, ensuring a high standard of accuracy and reproducibility.
 
 ## Raw Data
 
@@ -66,7 +66,7 @@ pizza_hut_reviews <- read.csv("../Data/pizza_hut_reviews.csv")
 
 This study utilizes the "Pizza Hut Reviews - Insights from One of Sri Lanka's Pioneer Branches" dataset, extracted from Kaggle. The dataset is a treasure trove of customer sentiments, encompassing 4000 entries of evaluative feedback for the Pizza Hut branch located at Union Place, Colombo, which is noted for being among the first to establish Pizza Hut's presence in Sri Lanka.
 
-As depicted in @tbl-raw, the dataset provides a snapshot into the customers’ appraisals and narratives. Each record consists of three columns that collectively offer a comprehensive picture of consumer opinion.
+As depicted in @tbl-raw, the dataset provides a snapshot into the customers’ appraisals and narratives. Each record consists of three columns that collectively offer a picture of consumer opinion.
 
 - title: This column consistently identifies the venue as "Pizza Hut - Union Place," situating the reviews within the specific context of this branch's performance.
 
@@ -76,7 +76,7 @@ As depicted in @tbl-raw, the dataset provides a snapshot into the customers’ a
 
 While alternative datasets from different branches or regions could have been considered, the choice to focus on this specific dataset was intentional. The Union Place branch's historic significance within the Sri Lankan context presents a unique opportunity to understand customer feedback dynamics where brand establishment is deep-rooted.
 
-In presenting the raw data in @tbl-raw, readers are invited to witness the unfiltered voice of the customer, which will later be dissected and analyzed to glean actionable insights. This approach ensures a thorough examination of the data points, setting the stage for a nuanced analysis that respects the complexity and authenticity of customer feedback.
+In presenting the raw data in @tbl-raw, readers are invited to witness the unfiltered voice of the customer, which will later be dissected and analyzed to glean actionable insights. This approach ensures that data points are scrutinized and contributes to careful analysis that respects customer feedback.
 
 ```{r}
 #| label: tbl-raw
@@ -115,7 +115,7 @@ As demonstrated in @tbl-cleaned, the refined dataset retains the granularity of 
 
 - stars: Preserved from the raw data, this metric remains unchanged, symbolizing the customer's rating, ranging from 1 for dissatisfaction to 5 for exemplary service.
 
-- text_indicator: A binary variable, it denotes the presence (1) or absence (0) of textual commentary accompanying the star rating. This distinction is pivotal for subsequent analyses that differentiate between ratings supplemented with text and those that are not.
+- text_indicator: A binary variable, it denotes the presence (1) or absence (0) of textual commentary accompanying the star rating. This distinction is useful for subsequent analyses that differentiate between ratings supplemented with text and those that are not.
 
 - words: This numeric variable quantifies the length of the text accompanying the review. It operates in tandem with the 'text_indicator'—if a review is textually barren ('text_indicator' is 0), the 'words' count will also be 0. Conversely, when a review includes text, the 'words' variable captures the word count, adding a layer of depth to the quantitative assessment.
 
@@ -148,7 +148,7 @@ Notably, as the star rating decreases, the proportion of text reviews (blue bars
 
 ```{r}
 #| label: fig-text
-#| fig-cap: Different Frequency of Text Reviews Across Different Star Categories
+#| fig-cap: Frequency of Text Reviews Varies Across Different Star Categories
 #| warning: false
 #| echo: false
 
@@ -175,7 +175,7 @@ The plot suggests a tendency for reviews with higher star ratings to have shorte
 
 ```{r}
 #| label: fig-words
-#| fig-cap: Different Frequency of Text Reviews Across Different Star Categories
+#| fig-cap: Text Length Varies Across Text Reviews from Different Star Categories
 #| warning: false
 #| echo: false
 
@@ -195,13 +195,13 @@ text_reviews |>
 
 ```
 
-The synthesis of these visuals into our analysis provides preliminary insights into the nature of the reviews, laying the groundwork for more nuanced statistical modeling. They serve to highlight the initial observations that customers tend to write longer texts when they are less satisfied and tend to leave reviews without text when more satisfied, with the possible implications of these trends to be explored in subsequent modeling efforts.
+The synthesis of these visuals into our analysis provides preliminary insights into the nature of the reviews. They serve to highlight the initial observations that customers tend to write longer texts when they are less satisfied and tend to leave reviews without text when more satisfied, with the possible implications of these trends to be explored in subsequent modeling efforts.
 
 ## Measurement
 
-The pathway from individual dining experiences to structured dataset entries commences with patrons articulating their encounters at Pizza Hut's Union Place branch in Colombo via online review platforms. These digital expressions, manifested through both ratings and textual reviews, underpin the dataset leveraged in this analysis.
+The pathway from individual dining experiences to structured dataset entries commences with patrons articulating their encounters at Pizza Hut's Union Place branch in Colombo via online review platforms. These digital expressions, manifested through both ratings and textual reviews, underpin the dataset utilized in this analysis.
 
-The genesis of this dataset was adeptly orchestrated by its author through the utilization of web scraping tools, specifically leveraging Apify's Tool for Google Reviews. This approach ensured a thorough aggregation of customer feedback specific to this Pizza Hut location. In an effort to uphold ethical standards and privacy, the dataset author performed preliminary cleaning to anonymize the data by removing personal identifiers from the reviews. This step was critical in safeguarding individual privacy while retaining the dataset's analytical value.
+The genesis of this dataset was adeptly orchestrated by its author through the utilization of web scraping tools, specifically using Apify's Tool for Google Reviews. This approach ensured an aggregation of customer feedback specific to this Pizza Hut location. In an effort to uphold ethical standards and privacy, the dataset author performed preliminary cleaning to anonymize the data by removing personal identifiers from the reviews. This step was critical in safeguarding individual privacy while retaining the dataset's analytical value.
 
 The kaggle website hosting this dataset offers limited information on its compilation process. However, through direct communication with the dataset author, I gained insight into how the dataset was developed and subsequently created a datasheet to document these methodologies.
 
@@ -227,7 +227,7 @@ text_stars_model <- readRDS("../Models/text_stars_model.rds")
 
 Our analytical endeavor aims to decipher the underlying patterns in customer feedback for a Pizza Hut outlet, specifically examining the propensity of customers to leave textual comments alongside their star ratings. The central thesis of our model is to understand the relationship between the quantitative measure of customer satisfaction (the star ratings) and the qualitative aspect (textual feedback).
 
-The binary nature of our outcome of interest, `text_indicator`, which signifies the presence or absence of text in a review, necessitates a modeling approach that can handle dichotomous data effectively. Logistic regression is particularly suited for this task as it predicts the probability of a binary response based on one or more predictor variables. This model provides the probability that a review contains textual feedback for each level of star rating, which is crucial for our investigation into the nuances of customer reviews.
+The binary nature of our outcome of interest, `text_indicator`, which signifies the presence or absence of text in a review, necessitates a modeling approach that can handle dichotomous data effectively. Logistic regression is particularly suited for this task as it predicts the probability of a binary response based on one or more predictor variables. This model provides the probability that a review contains textual feedback for each level of star rating.
 
 The logistic regression model we are using is designed to examine how star ratings are associated with the presence of textual feedback in customer reviews. Mathematically, the model is expressed as:
 
@@ -252,7 +252,7 @@ In equation (\ref{eq-logisticmodel1}) and equation (\ref{eq-logisticmodel2}):
 
 We set the prior distributions for the intercept $\beta_0$ and the coefficient $\beta_1$ to be normal with a mean of 0 and a standard deviation of 2.5. This reflects our initial assumption that there is no strong prior belief about the direction or magnitude of the rating's influence on textual feedback.
 
-Through this logistic regression framework, we aim to quantify the extent to which the star rating influences the probability of textual feedback being provided. This quantification will enable us to discern whether customers who are more satisfied (higher stars) or less satisfied (lower stars) are more inclined to provide detailed textual feedback, thus offering valuable insights into consumer behavior and satisfaction.
+Through this logistic regression framework, we aim to quantify the extent to which the star rating influences the probability of textual feedback being provided. This quantification will enable us to discern whether customers who are more satisfied (higher stars) or less satisfied (lower stars) are more inclined to provide detailed textual feedback, thus offering insights into consumer behavior and satisfaction.
 
 By integrating the logistic regression model into our analysis, we expect to unveil patterns that could inform strategies to enhance customer engagement and satisfaction, potentially guiding operational improvements and customer service protocols.
 
@@ -320,7 +320,7 @@ By focusing on the subset of data where text indicator is 1, we concentrate on t
 
 Through this multilevel negative binomial model, we seek to elucidate the patterns that may exist between the satisfaction indicated by the star rating and the length of textual feedback provided. The analysis will explore whether customers who report different levels of satisfaction tend to leave more or less detailed reviews, as reflected in the word count.
 
-By adopting this modeling approach, we aim to extract substantive insights from the text reviews, which are particularly valuable to the store for understanding customer experiences in depth and leveraging those insights for service improvement.
+By adopting this modeling approach, we aim to extract substantive insights from the text reviews, which are particularly valuable to the store for understanding customer experiences in depth and using those insights for service improvement.
 
 # Results {#sec-results}
 
@@ -340,7 +340,7 @@ Taken together, these results support the assertion that customers who provide l
 
 The R-squared values in @tbl-coefficients1 indicate that the proportion of variance in the response variable explained by the model is very low, suggesting that factors other than star ratings may influence the decision to leave a text review.
 
-In summary, logistic regression analysis provides evidence to support the notion that customer satisfaction, as measured by star ratings, is inversely related to the probability of leaving text feedback. This insight is valuable for understanding customer engagement and can inform strategies to encourage more comprehensive feedback from highly satisfied customers.
+In summary, logistic regression analysis provides evidence to support the notion that customer satisfaction, as measured by star ratings, is inversely related to the probability of leaving text feedback. This insight is valuable for understanding customer engagement and can inform strategies to encourage more detailed feedback from highly satisfied customers.
 
 ```{r}
 #| label: tbl-coefficients1
@@ -419,11 +419,11 @@ words_stan_glmer |>
 
 ## Overview of Works
 
-In this article, we conduct a comprehensive analysis of customer feedback at Pizza Hut stores in Sri Lanka, focusing on the relationship between star ratings and customers' propensity to leave text reviews and the length of these reviews. Using Kaggle's dataset, we carefully cleaned and prepared the data to build two different statistical models. The first model is a logistic regression designed to evaluate the likelihood of a customer leaving text feedback along with the star rating they provide. The second model is a multilevel negative binomial model used to understand the relationship between star ratings and text length in reviews containing written feedback. By analyzing the data through these models, we found that customers who gave lower star ratings were more likely to give reviews with text, and the texts they gave were longer and more detailed than those of customers who gave high star ratings. From this, we seek to uncover the nuances of customer satisfaction and engagement with the aim of providing actionable insights that enhance customer experience and business practices.
+In this article, we conduct a preliminary analysis of customer feedback at Pizza Hut stores in Sri Lanka, focusing on the relationship between star ratings and customers' propensity to leave text reviews and the length of these reviews. Using Kaggle's dataset, we carefully cleaned and prepared the data to build two different statistical models. The first model is a logistic regression designed to evaluate the likelihood of a customer leaving text feedback along with the star rating they provide. The second model is a multilevel negative binomial model used to understand the relationship between star ratings and text length in reviews containing written feedback. By analyzing the data through these models, we found that customers who gave lower star ratings were more likely to give reviews with text, and the texts they gave were longer and more detailed than those of customers who gave high star ratings. From this, we seek to uncover the nuances of customer satisfaction and engagement with the aim of providing actionable insights that enhance customer experience and business practices.
 
 ## Insights into Societal Behaviors
 
-This paper offers insights into how people behave when it comes to customer service feedback. It uncovers a consistent pattern where customers who aren't happy are more likely to leave detailed text feedback. This seems to be a way for them to express and justify their dissatisfaction. On the other hand, customers who are satisfied usually just leave a rating without writing much. This shows a common behavior where people feel a stronger need to talk about bad experiences, hoping to get recognized and to see changes made. Good experiences, though, tend to be briefly mentioned. This observation emphasizes how crucial it is for businesses to pay attention to negative feedback since it often holds key insights for improving services and making customers happier.
+This paper offers insights into how people behave when it comes to customer service feedback. It uncovers a consistent pattern where customers who aren't happy are more likely to leave detailed text feedback. This seems to be a way for them to express and justify their dissatisfaction. On the other hand, customers who are satisfied usually just leave a rating without writing much. This shows a common behavior where people feel a stronger need to talk about bad experiences, hoping to get recognized and to see changes made. Good experiences, though, tend to be briefly mentioned. This observation emphasizes how it works for businesses to pay attention to negative feedback since it often holds key insights for improving services and making customers happier.
 
 The study also opens up a conversation about the less obvious aspects of customer satisfaction. While customers who are unhappy tend to explain their issues in detail, those who are content might not say much beyond giving a high rating. This pattern suggests that businesses might miss out on understanding how many customers are actually satisfied, possibly leading to a mistaken view of the overall quality of service. It's a gentle reminder that feedback isn't always loud, and that positive feedback might not always be as visible in customer reviews.
 
@@ -447,7 +447,7 @@ The path forward from this study points to the integration of natural language p
 
 ## Diagnostics for the Logistic Regression Model
 
-@fig-diagnostics1-1 is a trace plot for the logistic regression model discussed in @sec-logistic. It illustrates the sampled values across multiple iterations of the Markov Chain Monte Carlo (MCMC) process for each model parameter. The plot shows that the chains for each parameter are well-mixed and stable, without noticeable drifts or divergences, suggesting good convergence. This indicates that the sampling process is reliable and the estimates for the model parameters are robust.
+@fig-diagnostics1-1 is a trace plot for the logistic regression model discussed in @sec-logistic. It illustrates the sampled values across multiple iterations of the Markov Chain Monte Carlo (MCMC) process for each model parameter. The plot shows that the chains for each parameter are well-mixed and stable, without noticeable drifts or divergences, suggesting good convergence. This indicates that the sampling process and the estimates for the model parameters are reliable.
 
 @fig-diagnostics1-2 is an Rhat plot for the logistic regression model in @sec-logistic. It displays the Rhat statistic for each chain, which is a measure of convergence. An Rhat value of 1 indicates perfect convergence, while values greater than 1 suggest that more sampling might be necessary. The plot shows that all Rhat values are close to 1, none exceeding the threshold of 1.1, which suggests that convergence has been achieved, and the chains have sampled from the posterior distribution effectively.
 
@@ -457,7 +457,7 @@ The path forward from this study points to the integration of natural language p
 #| message: false
 #| warning: false
 #| label: fig-diagnostics1
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
+#| fig-cap: "Checking the Convergence of the MCMC Algorithm for the Logistic Regerssion Model"
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
 
@@ -481,7 +481,7 @@ plot(text_stars_model, "rhat")
 #| message: false
 #| warning: false
 #| label: fig-diagnostics2
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
+#| fig-cap: "Checking the Convergence of the MCMC Algorithm for the Multilevel Model"
 #| fig-subcap: ["Trace plot", "Rhat plot"]
 #| layout-ncol: 2
 
