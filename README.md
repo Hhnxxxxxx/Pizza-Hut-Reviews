@@ -11,6 +11,7 @@ The repo is structured as:
 - `Data Sheet` contains the datasheet for the dataset used.
 - `Data` contains the data, including raw data `pizza_hut_reviews.csv` obtained from https://www.kaggle.com/datasets/kanchana1990/pizza-hut-ratings-and-reviews?resource=download, and cleaned data `clean_pizza_hut_reviews.parquet`.
 - `Model` contains fitted models.
+- `Other/Data Sheet` contains the datasheet for the raw dataset.
 - `Other/LLM` contains the text file of chat history with ChatGPT-4.
 - `Other/Sketches` contains the sketch of desired dataset and graph.
 - `Paper` contains the files used to generate the paper, including the Quarto document and reference bibliography file, as well as the PDF of the paper.
